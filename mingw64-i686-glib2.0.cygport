@@ -3,7 +3,7 @@ ORIG_PN="glib"
 inherit cross gnome2
 
 NAME="mingw64-i686-glib2.0"
-VERSION=2.32.4
+VERSION=2.34.3
 RELEASE=1
 CATEGORY="Devel"
 SUMMARY="GNOME core C function library for Win32 toolchain"
@@ -13,7 +13,9 @@ contains msvcrt-linked binaries (aka 'mingw').  It is for use with the
 mingw64-i686-gcc cross compiler, and installs into the
 /usr/i686-w64-mingw32/sys-root/mingw/{lib,include} directories."
 
-PATCH_URI="2.32-autoconf.patch  2.32-bgo674452.patch"
+PATCH_URI="
+	http://git.gnome.org/browse/glib/patch/gio/tests/gdbus-proxy.c?id=d9e8fea
+"
 
 DIFF_EXCLUDES="config.py"
 
@@ -27,5 +29,3 @@ src_install() {
 	rm -fr ${D}${CROSS_DATADIR}/{bash-completion,gdb,man}/
 	rm -fr ${D}${CROSS_DATADIR}/glib-2.0/{gdb,gettext}
 }
-
-KEEP_LA_FILES="none"
