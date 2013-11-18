@@ -3,7 +3,7 @@ ORIG_PN="glib"
 inherit cross gnome2
 
 NAME="mingw64-i686-glib2.0"
-VERSION=2.34.3
+VERSION=2.36.4
 RELEASE=1
 CATEGORY="Devel"
 SUMMARY="GNOME core C function library for Win32 toolchain"
@@ -13,19 +13,35 @@ contains msvcrt-linked binaries (aka 'mingw').  It is for use with the
 mingw64-i686-gcc cross compiler, and installs into the
 /usr/i686-w64-mingw32/sys-root/mingw/{lib,include} directories."
 
-PATCH_URI="
-	http://git.gnome.org/browse/glib/patch/gio/tests/gdbus-proxy.c?id=d9e8fea
-"
+PATCH_URI="2.34.3-m4macros.patch"
 
 DIFF_EXCLUDES="config.py"
 
+src_compile() {
+	cd ${S}
+	gnome2_autoreconf
+
+	# static and shared cannot be built simultaneously
+	mkdir -p ${B}/shared
+	cd ${B}/shared
+	gnome2_configure --enable-shared --disable-static
+	cygmake
+
+	mkdir -p ${B}/static
+	cd ${B}/static
+	gnome2_configure --disable-shared --enable-static
+	cygmake
+}
+
 src_install() {
-	cd ${B}
+	cd ${B}/static
+	cyginstall
+	cd ${B}/shared
 	cyginstall
 
 	rm -f ${D}${CROSS_BINDIR}/gdbus-codegen
 	rm -f ${D}${CROSS_BINDIR}/glib-{compile-resources,genmarshal,gettextize,mkenums}*
-	rm -fr ${D}${CROSS_LIBDIR}/{charset.alias,gdbus-2.0/}
+	rm -fr ${D}${CROSS_LIBDIR}/charset.alias
 	rm -fr ${D}${CROSS_DATADIR}/{bash-completion,gdb,man}/
-	rm -fr ${D}${CROSS_DATADIR}/glib-2.0/{gdb,gettext}
+	rm -fr ${D}${CROSS_DATADIR}/glib-2.0/{codegen,gdb,gettext}
 }
