@@ -13,7 +13,12 @@ contains msvcrt-linked binaries (aka 'mingw').  It is for use with the
 mingw64-i686-gcc cross compiler, and installs into the
 /usr/i686-w64-mingw32/sys-root/mingw/{lib,include} directories."
 
-PATCH_URI="2.34.3-m4macros.patch"
+PATCH_URI="
+	http://pkgs.fedoraproject.org/cgit/mingw-glib2.git/plain/0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch?h=f19
+	http://pkgs.fedoraproject.org/cgit/mingw-glib2.git/plain/glib-send-log-messages-to-correct-stdout-and-stderr.patch?h=f19
+	http://pkgs.fedoraproject.org/cgit/mingw-glib2.git/plain/glib-prefer-constructors-over-DllMain.patch?h=f20
+	2.34.3-m4macros.patch
+"
 
 DIFF_EXCLUDES="config.py"
 
